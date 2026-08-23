@@ -53,7 +53,6 @@
   </div>
 
   <script>
-    // PASTE YOUR APPS SCRIPT WEB APP URL HERE:
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRiP90LwSMGTZvsbzb7p1hw0QKMzV3XJPM2MKtPKaE6yVZ6bx4fq4ehR9jP7VAF940/exec";
 
     const ROSTER = [
@@ -157,7 +156,6 @@
       });
     }
 
-    // FORM SUBMISSION EVENT LISTENER
     // FAST NON-BLOCKING SUBMISSION
     document.getElementById("scoringForm").addEventListener("submit", (e) => {
       e.preventDefault();
@@ -174,12 +172,12 @@
         return;
       }
 
-      // 1. Instant UI Feedback (Zero waiting time)
+      // 1. Instant UI Feedback
       status.style.color = "#4ade80";
       status.innerText = `✔ تم تسجيل (${catOpt.getAttribute("data-points")} نقطة) لـ ${target}`;
       if (type === "individual") document.getElementById("scoutInput").value = "";
 
-      // 2. Background Dispatch (Fire & Forget with auto-retry)
+      // 2. Background Dispatch
       const payload = new URLSearchParams({
         type: type,
         target: target,
@@ -193,22 +191,13 @@
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: payload.toString()
       }).catch(() => {
-        // Fallback retry using navigator.sendBeacon
         navigator.sendBeacon(SCRIPT_URL, payload);
       });
-    });
-        status.style.color = "#4ade80";
-        status.innerText = "تمت إضافة النقاط بنجاح!";
-        if (type === "individual") document.getElementById("scoutInput").value = "";
-      } catch (err) {
-        status.style.color = "#f87171";
-        status.innerText = "حدث خطأ في الإرسال. تحقق من الإنترنت.";
-      } finally {
-        btn.disabled = false;
-      }
     });
 
     handleTypeChange();
   </script>
 </body>
 </html>
+
+   
