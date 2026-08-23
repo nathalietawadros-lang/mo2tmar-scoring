@@ -158,9 +158,9 @@
     }
 
     // FORM SUBMISSION EVENT LISTENER
-    document.getElementById("scoringForm").addEventListener("submit", async (e) => {
+    // FAST NON-BLOCKING SUBMISSION
+    document.getElementById("scoringForm").addEventListener("submit", (e) => {
       e.preventDefault();
-      const btn = document.getElementById("submitBtn");
       const status = document.getElementById("status");
       const type = document.getElementById("scoreType").value;
       const catOpt = document.getElementById("categorySelect").selectedOptions[0];
@@ -174,23 +174,29 @@
         return;
       }
 
-      btn.disabled = true;
-      status.style.color = "#94a3b8";
-      status.innerText = "جاري إضافة النقاط...";
+      // 1. Instant UI Feedback (Zero waiting time)
+      status.style.color = "#4ade80";
+      status.innerText = `✔ تم تسجيل (${catOpt.getAttribute("data-points")} نقطة) لـ ${target}`;
+      if (type === "individual") document.getElementById("scoutInput").value = "";
 
-      const formData = new FormData();
-      formData.append("type", type);
-      formData.append("target", target);
-      formData.append("category", catOpt.value);
-      formData.append("points", catOpt.getAttribute("data-points"));
+      // 2. Background Dispatch (Fire & Forget with auto-retry)
+      const payload = new URLSearchParams({
+        type: type,
+        target: target,
+        category: catOpt.value,
+        points: catOpt.getAttribute("data-points")
+      });
 
-      try {
-        await fetch(SCRIPT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          body: formData
-        });
-
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: payload.toString()
+      }).catch(() => {
+        // Fallback retry using navigator.sendBeacon
+        navigator.sendBeacon(SCRIPT_URL, payload);
+      });
+    });
         status.style.color = "#4ade80";
         status.innerText = "تمت إضافة النقاط بنجاح!";
         if (type === "individual") document.getElementById("scoutInput").value = "";
