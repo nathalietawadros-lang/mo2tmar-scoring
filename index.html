@@ -53,8 +53,8 @@
   </div>
 
   <script>
-    // Paste your Google Web App URL here
-    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+    // PASTE YOUR APPS SCRIPT WEB APP URL HERE:
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRiP90LwSMGTZvsbzb7p1hw0QKMzV3XJPM2MKtPKaE6yVZ6bx4fq4ehR9jP7VAF940/exec";
 
     const ROSTER = [
       // Team 1
@@ -157,6 +157,7 @@
       });
     }
 
+    // FORM SUBMISSION EVENT LISTENER
     document.getElementById("scoringForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = document.getElementById("submitBtn");
@@ -177,17 +178,17 @@
       status.style.color = "#94a3b8";
       status.innerText = "جاري إضافة النقاط...";
 
+      const formData = new FormData();
+      formData.append("type", type);
+      formData.append("target", target);
+      formData.append("category", catOpt.value);
+      formData.append("points", catOpt.getAttribute("data-points"));
+
       try {
         await fetch(SCRIPT_URL, {
           method: "POST",
           mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: type,
-            target: target,
-            category: catOpt.value,
-            points: catOpt.getAttribute("data-points")
-          })
+          body: formData
         });
 
         status.style.color = "#4ade80";
