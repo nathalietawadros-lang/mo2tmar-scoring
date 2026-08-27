@@ -11,7 +11,7 @@
     label { font-weight: 600; display: block; margin-top: 16px; margin-bottom: 6px; color: #94a3b8; }
     select, input, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 16px; box-sizing: border-box; }
     input:focus, select:focus { outline: none; border-color: #38bdf8; }
-    button { background: #0284c7; color: white; font-weight: bold; border: none; margin-top: 24px; cursor: pointer; padding: 14px; border-radius: 8px; }
+    button { background: #0284c7; color: white; font-weight: bold; border: none; margin-top: 24px; cursor: pointer; padding: 14px; border-radius: 8px; font-size: 16px; }
     button:hover { background: #0369a1; }
     button:disabled { background: #475569; cursor: not-allowed; }
     #status { margin-top: 16px; text-align: center; font-weight: bold; }
@@ -32,10 +32,10 @@
 
       <label>الفريق</label>
       <select id="teamSelect" onchange="filterScoutsByTeam()">
-        <option value="Team 1">Team 1</option>
-        <option value="Team 2">Team 2</option>
-        <option value="Team 3">Team 3</option>
-        <option value="Team 4">Team 4</option>
+        <option value="البشوات">البشوات (Team 1)</option>
+        <option value="البهوات">البهوات (Team 2)</option>
+        <option value="الافندية">الافندية (Team 3)</option>
+        <option value="الاكابر">الاكابر (Team 4)</option>
       </select>
 
       <div id="scoutSearchContainer" class="hidden">
@@ -56,70 +56,75 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRiP90LwSMGTZvsbzb7p1hw0QKMzV3XJPM2MKtPKaE6yVZ6bx4fq4ehR9jP7VAF940/exec";
 
     const ROSTER = [
-      // Team 1
-      { name: "كيرلس رامي جرجس", team: "Team 1" }, { name: "جونيور يوسف اسحاق", team: "Team 1" },
-      { name: "لافينيا نادر راضي", team: "Team 1" }, { name: "فيلوباتير مينا عياد", team: "Team 1" },
-      { name: "سيلينا مينا نبيل", team: "Team 1" }, { name: "بافلي اسامة جميل", team: "Team 1" },
-      { name: "توني اسامة جميل", team: "Team 1" }, { name: "باميلا مينا فؤاد", team: "Team 1" },
-      { name: "كيرلس سامي فكري", team: "Team 1" }, { name: "ادم سامح جرجس", team: "Team 1" },
-      { name: "روبين نبيل بشري", team: "Team 1" }, { name: "برنتي مايكل جمال", team: "Team 1" },
-      { name: "مارك سامح وديع", team: "Team 1" }, { name: "دولوريس فضل فؤاد", team: "Team 1" },
-      { name: "ثيورا هاني", team: "Team 1" }, { name: "كارلوس فادي الفي", team: "Team 1" },
-      { name: "ريتا وليد سامي", team: "Team 1" }, { name: "مريم رضا", team: "Team 1" },
-      { name: "اميل بيشوي وفيق", team: "Team 1" }, { name: "جانيستا فريد", team: "Team 1" },
-      { name: "كيرلس رضا", team: "Team 1" }, { name: "ابانوب جرجس", team: "Team 1" },
-      // Team 2
-      { name: "كارلوس رامي جرجس", team: "Team 2" }, { name: "سيلينا مينا مقبل", team: "Team 2" },
-      { name: "كاراس جوزيف فايز", team: "Team 2" }, { name: "مريم باسم كميل", team: "Team 2" },
-      { name: "ديفيد مينا ابراهيم", team: "Team 2" }, { name: "مارسيلينو ابانوب نادي", team: "Team 2" },
-      { name: "مارك مينا منير", team: "Team 2" }, { name: "جونيور جون فرج", team: "Team 2" },
-      { name: "مارتن سامح بخيت", team: "Team 2" }, { name: "ليديا وحيد حنا", team: "Team 2" },
-      { name: "كيريا مايكل", team: "Team 2" }, { name: "توماس اندرو عاطف", team: "Team 2" },
-      { name: "روفانيو مينا الير", team: "Team 2" }, { name: "كاراس اشرف فيكتور", team: "Team 2" },
-      { name: "ابرام رامز موريس", team: "Team 2" }, { name: "ميليسيا امجد قابيل", team: "Team 2" },
-      { name: "ميرا مينا ابراهيم", team: "Team 2" }, { name: "ميراي عماد", team: "Team 2" },
-      { name: "فيلومينا جرجس ناجح", team: "Team 2" }, { name: "يوستينا اشرف اديب", team: "Team 2" },
-      { name: "مينا وائل محسن", team: "Team 2" }, { name: "ديفيد ثروت سيحه", team: "Team 2" },
-      // Team 3
-      { name: "جاكوب رفيق عادل", team: "Team 3" }, { name: "بارثينيا عبد الملك متى", team: "Team 3" },
-      { name: "كرمه رامي انور", team: "Team 3" }, { name: "جون عماد عبد الملك", team: "Team 3" },
-      { name: "ناتالي الير اميل", team: "Team 3" }, { name: "نيكول الير اميل", team: "Team 3" },
-      { name: "مارفل مرقس صدقي", team: "Team 3" }, { name: "مافي اسامة", team: "Team 3" },
-      { name: "كلارا اسامة", team: "Team 3" }, { name: "دانيال ماجد ميلاد", team: "Team 3" },
-      { name: "جوي رفيق جمال", team: "Team 3" }, { name: "جورج جرجس زكي", team: "Team 3" },
-      { name: "يوسف جورج عبد السيد", team: "Team 3" }, { name: "انطونيوس مينا كمال", team: "Team 3" },
-      { name: "جوناثان نبيل لبيب", team: "Team 3" }, { name: "برياره بيتر اديب", team: "Team 3" },
-      { name: "شيري شادي امين", team: "Team 3" }, { name: "مارسلينو وسام وهبه", team: "Team 3" },
-      { name: "بولا هاني عطيه", team: "Team 3" }, { name: "جويل عماد رشدي", team: "Team 3" },
-      { name: "كريستي كيرلس جرس", team: "Team 3" }, { name: "ايلينا راني نشأت", team: "Team 3" },
-      { name: "ابانوب الامير بشاي", team: "Team 3" },
-      // Team 4
-      { name: "مارسلينو مدحت ناجي", team: "Team 4" }, { name: "أنجلينا مارك سامح", team: "Team 4" },
-      { name: "مكسيموس اندرو ثروت", team: "Team 4" }, { name: "ارسانيوس عصام عطيه", team: "Team 4" },
-      { name: "جرسى جورج فليب", team: "Team 4" }, { name: "كاراس شنودة حاربي", team: "Team 4" },
-      { name: "مينا عادل وائل جرجس", team: "Team 4" }, { name: "باتريك اسامة رفعت", team: "Team 4" },
-      { name: "ايفين ابراهيم عيسى", team: "Team 4" }, { name: "لارا جون زكريا", team: "Team 4" },
-      { name: "كارين ابراهيم صلاح", team: "Team 4" }, { name: "يوسف سامح سامي", team: "Team 4" },
-      { name: "مايفن فادي سيف", team: "Team 4" }, { name: "جولينا نشأت ناجي", team: "Team 4" },
-      { name: "مريم مدحت سامي", team: "Team 4" }, { name: "ناتالي سامح اسطفانوس", team: "Team 4" },
-      { name: "انطونيوس سامي", team: "Team 4" }, { name: "مارينا مايكل صلاح", team: "Team 4" },
-      { name: "بولا جابر يوسف", team: "Team 4" }, { name: "كريم عجايبى شحاته", team: "Team 4" },
-      { name: "فيلوباتير روماني", team: "Team 4" }
+      // البشوات (Team 1)
+      { name: "كريس رامي جرجس", team: "البشوات" }, { name: "جونيور يوسف اسحاق", team: "البشوات" },
+      { name: "لافينيا نادر راضي", team: "البشوات" }, { name: "فيلوباتير مينا عياد", team: "البشوات" },
+      { name: "سيلينا مينا نبيل", team: "البشوات" }, { name: "بافلي اسامة جميل", team: "البشوات" },
+      { name: "توني اسامة جميل", team: "البشوات" }, { name: "باميلا مينا فؤاد", team: "البشوات" },
+      { name: "كيرلس سامي فكري", team: "البشوات" }, { name: "ادم سامح جرجس", team: "البشوات" },
+      { name: "روبين نبيل بشري", team: "البشوات" }, { name: "برنتي مايكل جمال", team: "البشوات" },
+      { name: "مارك سامح وديع", team: "البشوات" }, { name: "دولوريس فضل فؤاد", team: "البشوات" },
+      { name: "ثيورا هاني", team: "البشوات" }, { name: "كارلوس فادي الفي", team: "البشوات" },
+      { name: "ريتا وليد سامي", team: "البشوات" }, { name: "مريم رضا", team: "البشوات" },
+      { name: "اميل بيشوي وفيق", team: "البشوات" }, { name: "جانيستا فريد", team: "البشوات" },
+      { name: "كيرلس رضا", team: "البشوات" }, { name: "ابانوب جرجس", team: "البشوات" },
+
+      // البهوات (Team 2)
+      { name: "كارلوس رامي جرجس", team: "البهوات" }, { name: "سيلينا مينا مقبل", team: "البهوات" },
+      { name: "كاراس جوزيف فايز", team: "البهوات" }, { name: "مريم باسم كميل", team: "البهوات" },
+      { name: "ديفيد مينا ابراهيم", team: "البهوات" }, { name: "مارسيلينو ابانوب نادي", team: "البهوات" },
+      { name: "مارك مينا منير", team: "البهوات" }, { name: "جونيور جون فرج", team: "البهوات" },
+      { name: "مارتن سامح بخيت", team: "البهوات" }, { name: "ليديا وحيد حنا", team: "البهوات" },
+      { name: "كيريا مايكل", team: "البهوات" }, { name: "توماس اندرو عاطف", team: "البهوات" },
+      { name: "روفانيو مينا الير", team: "البهوات" }, { name: "كاراس اشرف فيكتور", team: "البهوات" },
+      { name: "ابرام رامز موريس", team: "البهوات" }, { name: "ميليسيا امجد قابيل", team: "البهوات" },
+      { name: "ميرا مينا ابراهيم", team: "البهوات" }, { name: "ميراي عماد", team: "البهوات" },
+      { name: "فيلومينا جرجس ناجح", team: "البهوات" }, { name: "يوستينا اشرف اديب", team: "البهوات" },
+      { name: "مينا وائل محسن", team: "البهوات" }, { name: "ديفيد ثروت سيحه", team: "البهوات" },
+
+      // الافندية (Team 3)
+      { name: "جاكوب رفيق عادل", team: "الافندية" }, { name: "بارثينيا عبد الملك متى", team: "الافندية" },
+      { name: "كرمه رامي انور", team: "الافندية" }, { name: "جون عماد عبد الملك", team: "الافندية" },
+      { name: "ناتالي الير اميل", team: "الافندية" }, { name: "نيكول الير اميل", team: "الافندية" },
+      { name: "مارفل مرقس صدقي", team: "الافندية" }, { name: "مافي اسامة", team: "الافندية" },
+      { name: "كلارا اسامة", team: "الافندية" }, { name: "دانيال ماجد ميلاد", team: "الافندية" },
+      { name: "جوي رفيق جمال", team: "الافندية" }, { name: "جورج جرجس زكي", team: "الافندية" },
+      { name: "يوسف جورج عبد السيد", team: "الافندية" }, { name: "انطونيوس مينا كمال", team: "الافندية" },
+      { name: "جوناثان نبيل لبيب", team: "الافندية" }, { name: "برياره بيتر اديب", team: "الافندية" },
+      { name: "شيري شادي امين", team: "الافندية" }, { name: "مارسلينو وسام وهبه", team: "الافندية" },
+      { name: "بولا هاني عطيه", team: "الافندية" }, { name: "جويل عماد رشدي", team: "الافندية" },
+      { name: "كريستي كيرلس جرس", team: "الافندية" }, { name: "ايلينا راني نشأت", team: "الافندية" },
+      { name: "ابانوب الامير بشاي", team: "الافندية" },
+
+      // الاكابر (Team 4)
+      { name: "مارسلينو مدحت ناجي", team: "الاكابر" }, { name: "أنجلينا مارك سامح", team: "الاكابر" },
+      { name: "مكسيموس اندرو ثروت", team: "الاكابر" }, { name: "ارسانيوس عصام عطيه", team: "الاكابر" },
+      { name: "جرسى جورج فليب", team: "الاكابر" }, { name: "كاراس شنودة حاربي", team: "الاكابر" },
+      { name: "مينا عادل وائل جرجس", team: "الاكابر" }, { name: "باتريك اسامة رفعت", team: "الاكابر" },
+      { name: "ايفين ابراهيم عيسى", team: "الاكابر" }, { name: "لارا جون زكريا", team: "الاكابر" },
+      { name: "كارين ابراهيم صلاح", team: "الاكابر" }, { name: "يوسف سامح سامي", team: "الاكابر" },
+      { name: "مايفن فادي سيف", team: "الاكابر" }, { name: "جولينا نشأت ناجي", team: "الاكابر" },
+      { name: "مريم مدحت سامي", team: "الاكابر" }, { name: "ناتالي سامح اسطفانوس", team: "الاكابر" },
+      { name: "انطونيوس سامي", team: "الاكابر" }, { name: "مارينا مايكل صلاح", team: "الاكابر" },
+      { name: "بولا جابر يوسف", team: "الاكابر" }, { name: "كريم عجايبى شحاته", team: "الاكابر" },
+      { name: "فيلوباتير روماني", team: "الاكابر" }
     ];
 
+    // Individual categories (Removed الشعار)
     const INDIV_CATEGORIES = [
       { name: "درس كتاب و روحي - 200", points: 200 },
       { name: "حضور بدري  - 50", points: 50 },
       { name: "مجموعات العمل - 100", points: 100 },
       { name: "الاكل - 50", points: 50 },
       { name: "صلاة و قداس - 200", points: 200 },
-      { name: "الشعار - 50", points: 50 },
       { name: "مزمور - 100", points: 100 },
       { name: "نظافة و النظام - 100", points: 100 }
     ];
 
+    // Team categories (Added شعار و ترانيم)
     const TEAM_CATEGORIES = [
       { name: "مجموعات العمل (فريق) - 100", points: 100 },
+      { name: "شعار و ترانيم - 50", points: 50 },
       { name: "مزمور (فريق) - 200", points: 200 },
       { name: "BIG GAME  -  500", points: 500 },
       { name: "لعبة عادية - 200", points: 200 }
@@ -199,5 +204,3 @@
   </script>
 </body>
 </html>
-
-   
